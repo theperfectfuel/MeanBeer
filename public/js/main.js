@@ -36,7 +36,7 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 	})
 
 	.controller('navCtrl', ['$scope', function($scope) {
-		$scope.title = "Make Beer!";
+		$scope.title = "Home";
 	}])
 
 	.controller('beerCtrl', ['$scope', function($scope) {
@@ -44,8 +44,10 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 
 	}])
 
-	.controller('newRecipeCtrl', ['$scope', function($scope) {
+	.controller('newRecipeCtrl', ['$scope', '$http', '$location', function($scope, $http, $location) {
 		$scope.recipetitle = "Create a New Recipe";
+
+		$scope.newRecipe = {};
 
 		$scope.grains_list = [];
 		$scope.grains_list_obj = {};
@@ -87,9 +89,20 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 	      $scope.other_list_obj = angular.copy($scope.other_list);
 	    };
 
-		$scope.recipes = new Firebase("https://fiery-torch-5303.firebaseio.com/Recipes");
+		//$scope.recipes = new Firebase("https://fiery-torch-5303.firebaseio.com/Recipes");
 
-		$scope.addRecipe = function() {
+		/*$http({
+			method: 'POST',
+			url: '/new-recipe'
+		}).then(function successCallback(response) {
+			recList = response.data;
+			console.log(recList);
+			$scope.datas = recList;
+		}, function errorCallback(response) {
+			console.log(response);
+		});*/
+
+		/*$scope.addRecipe = function() {
 			$scope.recipes.push({
 				beer_name: $scope.beer_name,
 				beer_style: $scope.beer_style,
@@ -104,7 +117,37 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 				batch_size: $scope.batch_size,
 				brew_instructions: $scope.brew_instructions
 
+			});*/
+
+		$scope.addRecipe = function() {
+			$scope.newRecipe = {
+				beer_name: $scope.beer_name,
+				beer_style: $scope.beer_style,
+				beer_abv: $scope.beer_abv,
+				grains_list: $scope.grains_list_obj,
+				hops_list: $scope.hops_list_obj,
+				yeast_list: $scope.yeast_list_obj,
+				other_list: $scope.other_list_obj,
+				orig_grav: $scope.orig_grav,
+				final_grav: $scope.final_grav,
+				brew_difficulty: $scope.brew_difficulty,
+				batch_size: $scope.batch_size,
+				brew_instructions: $scope.brew_instructions
+
+			};
+
+			//console.log($scope.newRecipe);
+
+			$http({
+		    method: 'POST',
+		    url: '/new-recipe',
+		    data: $scope.newRecipe,
+		    //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).then(function successCallback(response) {
+				console.log('done');
 			});
+
+			// Reset form
 			$scope.beer_name = "";
 			$scope.beer_style = "";
 			$scope.beer_abv = "";
@@ -121,15 +164,28 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 			$scope.other_ingredient = "";
 			$scope.other_amount = "";
 			$scope.brew_instructions = "";
+			$location.path( "/list-recipes" );
 		};
-
 
 	}])
 
-	.controller('listRecipesCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray) {
+	.controller('listRecipesCtrl', ['$scope', '$http', function($scope, $http) {
 
-		var recList = new Firebase("https://fiery-torch-5303.firebaseio.com/Recipes");
-		$scope.datas = $firebaseArray(recList);
+		var recList = {};
+
+		$http({
+			method: 'GET',
+			url: '/list-recipes'
+		}).then(function successCallback(response) {
+			recList = response.data;
+			console.log(recList);
+			$scope.datas = recList;
+		}, function errorCallback(response) {
+			console.log(response);
+		});
+
+		
+		
 		//$scope.datas.$loaded().then(function(array) {});
 	}])
 

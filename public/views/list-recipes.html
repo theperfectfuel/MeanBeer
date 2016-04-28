@@ -1,7 +1,7 @@
-<div class="page_html">
+<div class="page_html"  ng-init="scrollToTop()">
  <header class="hi"><span class="color_b">Brew Recipes</span></header>
   <article class="list_wrap">
-    <div class="item_wrap" ng-repeat="data in datas | orderBy: '-$id'">
+    <div class="item_wrap" ng-repeat="data in datas | orderBy: '-id'">
       <div class="item_data">
         <p>
         <span class="beer_name">Name: {{data.beer_name}}</span>
