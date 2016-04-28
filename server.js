@@ -98,14 +98,30 @@ app.use(express.static('public'));
 
 app.get('/list-recipes', function(req, res) {
 
-	// use mongoose to get all todos in the database
+	// use mongoose to get all recipes in the database
 	Recipe.find(function(err, recipes) {
 
 		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
 		if (err)
 		    return res.send(err);
 
-		return res.json(recipes); // return all todos in JSON format
+		return res.json(recipes); // return all recipes in JSON format
+	});
+});
+
+app.get('/list-recipes/:recipeID', function(req, res) {
+
+
+	// use mongoose to get one recipe in the database
+	Recipe.findOne({_id: req.query.recipeID}, function(err, recipe) {
+
+		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+		if (err) {
+		    return res.send(err);
+		} else {
+			console.log(recipe);
+			return res.json(recipe); // return one recipe in JSON format
+		}
 	});
 });
 
@@ -115,7 +131,12 @@ app.post('/new-recipe', function(req, res) {
 	var recipe = new Recipe(req.body);
 
 	recipe.save(function(err, recipe) {
-		if (err) return console.log('error saving ', err);
+		if (err) {
+			return console.log('error saving ', err);
+			res.status(500).send('An error occurred');
+		} else {
+			res.status(202).send(recipe);
+		}
 	});
 });
 
