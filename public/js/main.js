@@ -1,5 +1,5 @@
-angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
-	.config(['$routeProvider', function($routeProvider) {
+angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular-storage', 'angular-jwt'])
+	.config(['$routeProvider', 'authProvider', '$httpProvider', 'jwtInterceptorProvider', function($routeProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
 		$routeProvider.when('/home', {
 			templateUrl: './views/home.html',
 			controller: 'beerCtrl'
@@ -25,7 +25,50 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 			controller: 'listShoppingListsCtrl'
 		})
 		.otherwise('/home');
+
+		authProvider.init({
+			domain: 'theperfectfuel.auth0.com',
+			clientID: 'l7qdC9h7RafkTlAGIJqMl3g99YBPD9hZ'
+		});
+
+		authProvider.on('loginSuccess', function($location, profilePromise, idToken, store) {
+		  console.log("Login Success");
+		  profilePromise.then(function(profile) {
+		    store.set('profile', profile);
+		    store.set('token', idToken);
+		  });
+		  $location.path('/');
+		});
+
+		authProvider.on('loginFailure', function() {
+		   // Error Callback
+		});
+
+		jwtInterceptorProvider.tokenGetter = ['store', function(store) {
+			return store.get('token');
+		}];
+
+		$httpProvider.interceptors.push('jwtInterceptor');
+
 	}])
+
+	.run(function($rootScope, auth, store, jwtHelper, $location) {
+		auth.hookEvents();
+	  // This events gets triggered on refresh or URL change
+	  $rootScope.$on('$locationChangeStart', function() {
+	    var token = store.get('token');
+	    if (token) {
+	      if (!jwtHelper.isTokenExpired(token)) {
+	        if (!auth.isAuthenticated) {
+	          auth.authenticate(store.get('profile'), token);
+	        }
+	      } else {
+	        // Either show the login page or use the refresh token to get a new idToken
+	        $location.path('/');
+	      }
+	    }
+	  });
+	})
 
 	.factory('recipeRequest', function() {
 
@@ -35,8 +78,17 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 
 	})
 
-	.controller('navCtrl', ['$scope', function($scope) {
+	.controller('loginCtrl', ['$scope', 'auth', 'store', function($scope, auth, store) {
+		$scope.auth = auth;
 		$scope.title = "Home";
+
+		$scope.logout = function() {
+			auth.signout();
+			store.remove('profile');
+			store.remove('token');
+			console.log("Logged out! " + auth.isAuthenticated);
+		};
+
 	}])
 
 	.controller('beerCtrl', ['$scope', function($scope) {

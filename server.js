@@ -1,5 +1,11 @@
 var express = require('express');
 var app = express();
+var jwt = require('express-jwt');
+
+var jwtCheck = jwt({
+	secret: new Buffer('RlrAVV7xbT_QmLh3XEnZ0EUYI4do4q3cExJYAg32o1Cm_9zEp_WH8BNC3DeRWOmQ', 'base64'),
+	aud: 'l7qdC9h7RafkTlAGIJqMl3g99YBPD9hZ'
+});
 
 var mongoose = require('mongoose');
 
@@ -95,6 +101,8 @@ Recipe.find(function(err, recipes) {
 
 
 app.use(express.static('public'));
+
+app.use('/new-recipe', jwtCheck);
 
 app.get('/list-recipes', function(req, res) {
 

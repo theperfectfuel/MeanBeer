@@ -1,9 +1,18 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron" ng-init="scrollToTop()">
-      <div class="container">
+      <div class="container" ng-controller="loginCtrl">
         <h1>{{maintitle}}</h1>
         <h3>Make recipes, shopping lists and some new friends.</h3>
-        <p><a class="btn btn-primary btn-lg" href="#/new-recipe" role="button">Create a recipe &raquo;</a></p>
+        <p ng-show="auth.isAuthenticated">
+          <a class="btn btn-primary btn-lg" href="#/new-recipe" role="button">
+            Create a recipe &raquo;
+          </a>
+        </p>
+        <p ng-show="!auth.isAuthenticated">
+          <a class="btn btn-primary btn-lg" ng-click="auth.signin()" role="button">
+            Login to Create a recipe &raquo;
+          </a>
+        </p>
       </div>
     </div>
 
