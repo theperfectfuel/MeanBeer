@@ -159,12 +159,12 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 			};
 
 			$http({
-		    method: 'POST',
-		    url: '/new-recipe',
-		    data: $scope.newRecipe,
-		    //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			    method: 'POST',
+			    url: '/new-recipe',
+			    data: $scope.newRecipe,
+			    //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			}).then(function successCallback(response) {
-				console.log('done');
+					console.log('done');
 			});
 
 			// Reset form
@@ -207,9 +207,10 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 	}])
 
 
-	.controller('showBeerCtrl', ['$scope', '$routeParams', '$route', '$http', 'recipeRequest', function($scope, $routeParams, $route, $http, recipeRequest) {
+	.controller('showBeerCtrl', ['$scope', '$routeParams', '$route', '$http', 'recipeRequest', 'auth', function($scope, $routeParams, $route, $http, recipeRequest, auth) {
 
 		$scope.recipeID = $routeParams.recipeID;
+		$scope.auth = auth;
 
 		var recipe = {};
 
@@ -228,43 +229,63 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 	}])
 
 
-	.controller('shoppingListCtrl', ['$scope', '$route', '$routeParams', '$firebaseObject', function($scope, $route, $routeParams, $firebaseObject) {
+	.controller('shoppingListCtrl', ['$scope', '$route', '$routeParams', '$http', function($scope, $route, $routeParams, $http) {
 
 		$scope.recipeID = $routeParams.recipeID;
+		$scope.beer_recipe = {};
+		$scope.shoppingList = {};
 
+		var newShoppingList = function() {
 
+			console.log("Inside shoppingList", $scope.beer_recipe);
 
-		var beerRecipe = new Firebase("https://fiery-torch-5303.firebaseio.com/Recipes/" + $scope.recipeID);
-		$scope.beer_recipe = $firebaseObject(beerRecipe);
-
-
-		$scope.newShoppingList = function() {
-			$scope.shoppingList = new Firebase("https://fiery-torch-5303.firebaseio.com/ShoppingLists");
-
-			$scope.beer_recipe.$loaded().then(function() {
-
-				$scope.shoppingList.push({
+			$scope.shoppingList = {
 				beer_name: $scope.beer_recipe.beer_name,
 				grains_list: $scope.beer_recipe.grains_list,
 				hops_list: $scope.beer_recipe.hops_list,
 				yeast_list: $scope.beer_recipe.yeast_list,
 				other_list: $scope.beer_recipe.other_list,
 				batch_size: $scope.beer_recipe.batch_size
-				});
+			};
 
+			$http({
+			    method: 'POST',
+			    url: '/shopping-list/:recipeID',
+			    data: $scope.shoppingList,
+			    //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).then(function successCallback(response) {
+					console.log('Finished shoppingList function');
 			});
 
 	    };
 
-    	$scope.newShoppingList();
+
+		$http({
+			method: 'GET',
+			url: '/list-recipes/:recipeID',
+			params: {recipeID: $scope.recipeID}
+		}).then(function successCallback(response) {
+			$scope.beer_recipe = response.data;
+			newShoppingList();
+			}, function errorCallback(response) {
+			console.log("Error cb " + response);
+		});
 
 	}])
 
-	.controller('listShoppingListsCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray) {
+	.controller('listShoppingListsCtrl', ['$scope', '$http', function($scope, $http) {
 
-		var shopLists = new Firebase("https://fiery-torch-5303.firebaseio.com/ShoppingLists");
-		$scope.datas = $firebaseArray(shopLists);
-		//$scope.datas.$loaded().then(function(array) {});
+		$scope.datas = {};
+
+		$http({
+			method: 'GET',
+			url: '/shopping-lists'
+		}).then(function successCallback(response) {
+			$scope.datas = response.data;
+			}, function errorCallback(response) {
+			console.log(response);
+		});
+
 	}]);
 
 
