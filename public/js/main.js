@@ -273,8 +273,9 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 
 	}])
 
-	.controller('listShoppingListsCtrl', ['$scope', '$http', function($scope, $http) {
+	.controller('listShoppingListsCtrl', ['$scope', '$http', 'auth', function($scope, $http, auth) {
 
+		$scope.auth = auth;
 		$scope.datas = {};
 
 		$http({

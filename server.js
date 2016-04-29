@@ -113,6 +113,8 @@ Recipe.find(function(err, recipes) {
 app.use(express.static('public'));
 
 app.use('/new-recipe', jwtCheck);
+app.use('/shopping-lists', jwtCheck);
+app.use('/shopping-lists/:recipeID', jwtCheck);
 
 app.get('/list-recipes', function(req, res) {
 
