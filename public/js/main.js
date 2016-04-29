@@ -89,36 +89,6 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 	      $scope.other_list_obj = angular.copy($scope.other_list);
 	    };
 
-		//$scope.recipes = new Firebase("https://fiery-torch-5303.firebaseio.com/Recipes");
-
-		/*$http({
-			method: 'POST',
-			url: '/new-recipe'
-		}).then(function successCallback(response) {
-			recList = response.data;
-			console.log(recList);
-			$scope.datas = recList;
-		}, function errorCallback(response) {
-			console.log(response);
-		});*/
-
-		/*$scope.addRecipe = function() {
-			$scope.recipes.push({
-				beer_name: $scope.beer_name,
-				beer_style: $scope.beer_style,
-				beer_abv: $scope.beer_abv,
-				grains_list: $scope.grains_list_obj,
-				hops_list: $scope.hops_list_obj,
-				yeast_list: $scope.yeast_list_obj,
-				other_list: $scope.other_list_obj,
-				orig_grav: $scope.orig_grav,
-				final_grav: $scope.final_grav,
-				brew_difficulty: $scope.brew_difficulty,
-				batch_size: $scope.batch_size,
-				brew_instructions: $scope.brew_instructions
-
-			});*/
-
 		$scope.addRecipe = function() {
 			$scope.newRecipe = {
 				beer_name: $scope.beer_name,
@@ -135,8 +105,6 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 				brew_instructions: $scope.brew_instructions
 
 			};
-
-			//console.log($scope.newRecipe);
 
 			$http({
 		    method: 'POST',
@@ -184,31 +152,12 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 			console.log(response);
 		});
 
-		
-		
-		//$scope.datas.$loaded().then(function(array) {});
 	}])
-
-/*	.controller('showBeerCtrl', ['$scope', '$routeParams', '$route', '$firebaseObject', 'recipeRequest', function($scope, $routeParams, $route, $firebaseObject, recipeRequest) {
-
-		$scope.recipeID = $routeParams.recipeID;
-
-		var beerRecipe = new Firebase("https://fiery-torch-5303.firebaseio.com/Recipes/" + $scope.recipeID);
-		$scope.beer_recipe = $firebaseObject(beerRecipe);
-
-		$scope.beer_recipe.$loaded().then(function(object) {
-
-		});
-
-
-	}])*/
 
 
 	.controller('showBeerCtrl', ['$scope', '$routeParams', '$route', '$http', 'recipeRequest', function($scope, $routeParams, $route, $http, recipeRequest) {
 
 		$scope.recipeID = $routeParams.recipeID;
-		//var beerRecipe = new Firebase("https://fiery-torch-5303.firebaseio.com/Recipes/" + $scope.recipeID);
-
 
 		var recipe = {};
 
@@ -223,7 +172,6 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase'])
 			}, function errorCallback(response) {
 			console.log(response);
 		});
-
 
 	}])
 
