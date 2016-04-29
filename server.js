@@ -60,7 +60,17 @@ var recipeSchema = mongoose.Schema({
 
 });
 
+var shoppingListSchema = mongoose.Schema({
+	beer_name: String,
+	grains_list: [grainsSchema],
+	hops_list: [hopsSchema],
+	yeast_list: [yeastSchema],
+	other_list: [otherSchema],
+	batch_size: Number
+});
+
 var Recipe = mongoose.model('Recipe', recipeSchema);
+var ShoppingList = mongoose.model('ShoppingList', shoppingListSchema);
 
 /*var blondy = new Recipe({ 
 
@@ -133,6 +143,20 @@ app.get('/list-recipes/:recipeID', function(req, res) {
 	});
 });
 
+app.get('/shopping-lists', function(req, res) {
+
+	// use mongoose to get one recipe in the database
+	ShoppingList.find(function(err, shoppingLists) {
+
+		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+		if (err) {
+		    return res.send(err);
+		} else {
+			return res.json(shoppingLists); // return all recipes in JSON format
+		}
+	});
+});
+
 app.post('/new-recipe', function(req, res) {
 	console.log(req.body);
 
@@ -140,10 +164,27 @@ app.post('/new-recipe', function(req, res) {
 
 	recipe.save(function(err, recipe) {
 		if (err) {
-			return console.log('error saving ', err);
 			res.status(500).send('An error occurred');
+			return console.log('error saving ', err);
+			
 		} else {
 			res.status(202).send(recipe);
+		}
+	});
+});
+
+app.post('/shopping-list/:recipeID', function(req, res) {
+	console.log("On BE", req.body);
+
+	var shoppingList = new ShoppingList(req.body);
+
+	shoppingList.save(function(err, shoppingList) {
+		if (err) {
+			res.status(500).send('An error occurred');
+			return console.log('error saving ', err);
+			
+		} else {
+			res.status(202).send(shoppingList);
 		}
 	});
 });
