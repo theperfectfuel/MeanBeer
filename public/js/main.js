@@ -32,12 +32,12 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 		});
 
 		authProvider.on('loginSuccess', function($location, profilePromise, idToken, store) {
-		  console.log("Login Success");
-		  profilePromise.then(function(profile) {
-		    store.set('profile', profile);
-		    store.set('token', idToken);
-		  });
-		  $location.path('/');
+			console.log("Login Success");
+			profilePromise.then(function(profile) {
+				store.set('profile', profile);
+				store.set('token', idToken);
+			});
+			$location.path('/');
 		});
 
 		authProvider.on('loginFailure', function() {
@@ -54,20 +54,20 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 
 	.run(function($rootScope, auth, store, jwtHelper, $location) {
 		auth.hookEvents();
-	  // This events gets triggered on refresh or URL change
-	  $rootScope.$on('$locationChangeStart', function() {
-	    var token = store.get('token');
-	    if (token) {
-	      if (!jwtHelper.isTokenExpired(token)) {
-	        if (!auth.isAuthenticated) {
-	          auth.authenticate(store.get('profile'), token);
-	        }
-	      } else {
-	        // Either show the login page or use the refresh token to get a new idToken
-	        $location.path('/');
-	      }
-	    }
-	  });
+		// This events gets triggered on refresh or URL change
+		$rootScope.$on('$locationChangeStart', function() {
+			var token = store.get('token');
+			if (token) {
+				if (!jwtHelper.isTokenExpired(token)) {
+					if (!auth.isAuthenticated) {
+						auth.authenticate(store.get('profile'), token);
+					}
+				} else {
+					// Either show the login page or use the refresh token to get a new idToken
+					$location.path('/');
+				}
+			}
+		});
 	})
 
 	.factory('recipeRequest', function() {
@@ -114,32 +114,32 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 		$scope.other_list_obj = {};
 
 		$scope.pushGrains = function() {
-	      $scope.grains_list.push({grains_type:$scope.grains_type, grains_amount:$scope.grains_amount});
-	      $scope.grains_type = "";
-	      $scope.grains_amount = "";
-	      $scope.grains_list_obj = angular.copy($scope.grains_list);
-	    };
+			$scope.grains_list.push({grains_type:$scope.grains_type, grains_amount:$scope.grains_amount});
+			$scope.grains_type = "";
+			$scope.grains_amount = "";
+			$scope.grains_list_obj = angular.copy($scope.grains_list);
+		};
 
 		$scope.pushHops = function() {
-	      $scope.hops_list.push({hops_type:$scope.hops_type, hops_amount:$scope.hops_amount});
-	      $scope.hops_type = "";
-	      $scope.hops_amount = "";
-	      $scope.hops_list_obj = angular.copy($scope.hops_list);
-	    };
+			$scope.hops_list.push({hops_type:$scope.hops_type, hops_amount:$scope.hops_amount});
+			$scope.hops_type = "";
+			$scope.hops_amount = "";
+			$scope.hops_list_obj = angular.copy($scope.hops_list);
+		};
 
 		$scope.pushYeast = function() {
-	      $scope.yeast_list.push({yeast_type:$scope.yeast_type, yeast_amount:$scope.yeast_amount});
-	      $scope.yeast_type = "";
-	      $scope.yeast_amount = "";
-	      $scope.yeast_list_obj = angular.copy($scope.yeast_list);
-	    };
+			$scope.yeast_list.push({yeast_type:$scope.yeast_type, yeast_amount:$scope.yeast_amount});
+			$scope.yeast_type = "";
+			$scope.yeast_amount = "";
+			$scope.yeast_list_obj = angular.copy($scope.yeast_list);
+		};
 
 		$scope.pushOther = function() {
-	      $scope.other_list.push({other_ingredient:$scope.other_ingredient, other_amount:$scope.other_amount});
-	      $scope.other_ingredient = "";
-	      $scope.other_amount = "";
-	      $scope.other_list_obj = angular.copy($scope.other_list);
-	    };
+			$scope.other_list.push({other_ingredient:$scope.other_ingredient, other_amount:$scope.other_amount});
+			$scope.other_ingredient = "";
+			$scope.other_amount = "";
+			$scope.other_list_obj = angular.copy($scope.other_list);
+		};
 
 		$scope.addRecipe = function() {
 			$scope.newRecipe = {
@@ -155,16 +155,15 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 				brew_difficulty: $scope.brew_difficulty,
 				batch_size: $scope.batch_size,
 				brew_instructions: $scope.brew_instructions
-
 			};
 
 			$http({
-			    method: 'POST',
-			    url: '/new-recipe',
-			    data: $scope.newRecipe,
-			    //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				method: 'POST',
+				url: '/new-recipe',
+				data: $scope.newRecipe,
+				//headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			}).then(function successCallback(response) {
-					console.log('done');
+				console.log('done');
 			});
 
 			// Reset form
@@ -249,15 +248,15 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular
 			};
 
 			$http({
-			    method: 'POST',
-			    url: '/shopping-list/:recipeID',
-			    data: $scope.shoppingList,
-			    //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				method: 'POST',
+				url: '/shopping-list/:recipeID',
+				data: $scope.shoppingList,
+				//headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			}).then(function successCallback(response) {
 					console.log('Finished shoppingList function');
 			});
 
-	    };
+		};
 
 
 		$http({

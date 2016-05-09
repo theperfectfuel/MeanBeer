@@ -56,7 +56,8 @@ var recipeSchema = mongoose.Schema({
 	final_grav: Number,
 	brew_difficulty: String,
 	batch_size: Number,
-	brew_instructions: String
+	brew_instructions: String,
+	brewer: String
 
 });
 
@@ -66,7 +67,8 @@ var shoppingListSchema = mongoose.Schema({
 	hops_list: [hopsSchema],
 	yeast_list: [yeastSchema],
 	other_list: [otherSchema],
-	batch_size: Number
+	batch_size: Number,
+	brewer: String
 });
 
 var Recipe = mongoose.model('Recipe', recipeSchema);
@@ -114,10 +116,12 @@ app.use(express.static('public'));
 
 app.use('/new-recipe', jwtCheck);
 app.use('/shopping-lists', jwtCheck);
-app.use('/shopping-lists/:recipeID', jwtCheck);
+app.use('/shopping-list/:recipeID', jwtCheck);
 
 app.get('/list-recipes', function(req, res) {
 
+	// TODO implement paging
+	
 	// use mongoose to get all recipes in the database
 	Recipe.find(function(err, recipes) {
 
@@ -139,7 +143,6 @@ app.get('/list-recipes/:recipeID', function(req, res) {
 		if (err) {
 		    return res.send(err);
 		} else {
-			console.log(recipe);
 			return res.json(recipe); // return one recipe in JSON format
 		}
 	});
@@ -147,8 +150,10 @@ app.get('/list-recipes/:recipeID', function(req, res) {
 
 app.get('/shopping-lists', function(req, res) {
 
-	// use mongoose to get one recipe in the database
-	ShoppingList.find(function(err, shoppingLists) {
+	var user_id = req.user.sub;
+
+	// use mongoose to get user's shopping lists in the database
+	ShoppingList.where('brewer', user_id).find(function(err, shoppingLists) {
 
 		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
 		if (err) {
@@ -160,9 +165,9 @@ app.get('/shopping-lists', function(req, res) {
 });
 
 app.post('/new-recipe', function(req, res) {
-	console.log(req.body);
 
 	var recipe = new Recipe(req.body);
+	recipe.brewer = req.user.sub;
 
 	recipe.save(function(err, recipe) {
 		if (err) {
@@ -170,15 +175,16 @@ app.post('/new-recipe', function(req, res) {
 			return console.log('error saving ', err);
 			
 		} else {
+			console.log('Recipe saved successfully');
 			res.status(202).send(recipe);
 		}
 	});
 });
 
 app.post('/shopping-list/:recipeID', function(req, res) {
-	console.log("On BE", req.body);
 
 	var shoppingList = new ShoppingList(req.body);
+	shoppingList.brewer = req.user.sub;
 
 	shoppingList.save(function(err, shoppingList) {
 		if (err) {
@@ -186,6 +192,7 @@ app.post('/shopping-list/:recipeID', function(req, res) {
 			return console.log('error saving ', err);
 			
 		} else {
+			console.log('List saved successfully');
 			res.status(202).send(shoppingList);
 		}
 	});
