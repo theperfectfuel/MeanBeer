@@ -92,6 +92,7 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-storage', '
 	}])
 
 	.controller('beerCtrl', ['$scope', function($scope) {
+		$scope.brandMsg = "Welcome to SharedBrew.com";
 		$scope.maintitle = "Let's Brew Some Beer!";
 
 	}])
