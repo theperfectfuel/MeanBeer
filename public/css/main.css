@@ -47,11 +47,6 @@ p {
 
 .text_wrap { margin-left: 65px; }
 
-@media only screen and (max-width: 1000px) { /* - Narrow Layout - */
-  .page_wrap { padding-left: 215px; }
-
-} /* - End Narrow - */
-
 header.hi { margin: 25px; font-size: 32px; width: 385px; padding: 10px; border-bottom: 1px solid #09C; color: #09C; letter-spacing: .08em; padding-left: 25px; }
 
 form {
@@ -124,7 +119,10 @@ input.button:hover {
 }
 
 
+@media only screen and (max-width: 1000px) { /* - Narrow Layout - */
+  .page_wrap { padding-left: 215px; }
 
+} /* - End Narrow - */
 
 
 
