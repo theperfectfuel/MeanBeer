@@ -1,7 +1,10 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron" ng-init="scrollToTop()">
       <div class="container" ng-controller="loginCtrl">
-        <h1>{{maintitle}}</h1>
+        <h1>
+          {{brandMsg}}<br />
+          {{maintitle}}
+       </h1>
         <h3>Make recipes, shopping lists and some new friends.</h3>
         <p ng-show="auth.isAuthenticated">
           <a class="btn btn-primary btn-lg" href="#/new-recipe" role="button">
@@ -19,17 +22,17 @@
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <h2>Latest Recipe</h2>
           <p>Some kind of IPA. </p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <h2>Latest Member</h2>
           <p>Someone brewing an IPA. </p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
+       </div> -->
+        <div class="col-md-6">
           <h2>Recommended Beer</h2>
           <p>Our favorite non-IPA of the moment.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
@@ -39,8 +42,8 @@
       <div class="row">
         <div class="col-md-6 col-md-offset-3 top-padding">
           <h3>Welcome!</h3>
-          <p>Beer recipe app thing is a place to discover new beer recipes, make quick and easy shopping lists for new batches and make some connections with other home brewers.</p>
-          <p>Start by creating a new recipe or just searching through the existing library of brew recipes already here. When you find a recipe you want to try, create a new shopping list from the link on the recipe.</p>
+          <p>SharedBrew.com is a place to discover new beer recipes, make quick and easy shopping lists for new batches and make some connections with other home brewers.</p>
+          <p>Start by signing up. Then creating a new recipe or just search through the existing library of brew recipes already here. When you find a recipe you want to try, create a new shopping list from the link on the recipe.</p>
         </div>
       </div>
 
