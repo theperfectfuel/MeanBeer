@@ -28,7 +28,7 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-storage', '
 
 		authProvider.init({
 			domain: 'theperfectfuel.auth0.com',
-			clientID: 'l7qdC9h7RafkTlAGIJqMl3g99YBPD9hZ'
+			clientID: 'PbkQCgbjAuOV4hf02FMZ3xRzTivqJwK9'
 		});
 
 		authProvider.on('loginSuccess', function($location, profilePromise, idToken, store) {
