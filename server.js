@@ -3,10 +3,12 @@ var app = express();
 var jwt = require('express-jwt');
 
 var port = process.env.PORT || CONFIG.port;
+var AUTH_SECRET = process.env.AUTH_SECRET;
+var AUTH_CLIENT = process.env.AUTH_CLIENT;
 
 var jwtCheck = jwt({
-	secret: new Buffer('RlrAVV7xbT_QmLh3XEnZ0EUYI4do4q3cExJYAg32o1Cm_9zEp_WH8BNC3DeRWOmQ', 'base64'),
-	aud: 'l7qdC9h7RafkTlAGIJqMl3g99YBPD9hZ'
+	secret: new Buffer(AUTH_SECRET, 'base64'),
+	aud: AUTH_CLIENT
 });
 
 var mongoose = require('mongoose');
