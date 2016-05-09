@@ -4,7 +4,7 @@
    Author's custom styles
    ========================================================================== */
 
-body { font-family: 'Arvo', sans-serif; color: #839496;}
+body { font-family: 'Arvo', Helvetica, sans-serif; color: #839496;}
 
 p {
   font-size: 1.3em;
@@ -31,7 +31,7 @@ p {
 .logo_wrap a { color: #839496; text-decoration: none; }
 .logo_wrap a:visited { color: #839496; }
 
-.nav_graphic { cursor: pointer; position: fixed; bottom: 10px; left: 25px; font-family: 'EntypoRegular'; font-size: 46px; }
+.nav_graphic { cursor: pointer; position: fixed; bottom: 10px; left: 25px; font-family: 'EntypoRegular', Helvetica, sans-serif; font-size: 46px; }
 
 .color_a { color: #2aa198; }
 .color_b { color: #657b83; }
@@ -116,6 +116,7 @@ input.button:hover {
   background-repeat: no-repeat;
   color: white;
   text-shadow: 0 2px 4px rgba(30, 40, 53, 0.75);
+  border-bottom: 2px solid #2c2c2c;
 }
 
 .top-padding {
