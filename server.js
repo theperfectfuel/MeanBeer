@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var jwt = require('express-jwt');
 
+var port = process.env.PORT || CONFIG.port;
+
 var jwtCheck = jwt({
 	secret: new Buffer('RlrAVV7xbT_QmLh3XEnZ0EUYI4do4q3cExJYAg32o1Cm_9zEp_WH8BNC3DeRWOmQ', 'base64'),
 	aud: 'l7qdC9h7RafkTlAGIJqMl3g99YBPD9hZ'
@@ -202,6 +204,6 @@ app.get('*', function(req, res) {
 	res.sendFile(__dirname + '/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-app.listen(8080, function() {	
+app.listen(port, function() {	
 	console.log('server started');
 });
