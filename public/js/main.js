@@ -1,4 +1,4 @@
-angular.module('beerApp', ['ngRoute', 'ngAnimate', 'firebase', 'auth0', 'angular-storage', 'angular-jwt'])
+angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-storage', 'angular-jwt'])
 	.config(['$routeProvider', 'authProvider', '$httpProvider', 'jwtInterceptorProvider', function($routeProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
 		$routeProvider.when('/home', {
 			templateUrl: './views/home.html',
