@@ -1,4 +1,4 @@
-angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-storage', 'angular-jwt'])
+angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-jwt'])
 	.config(['$routeProvider', 'authProvider', '$httpProvider', 'jwtInterceptorProvider', function($routeProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
 		$routeProvider.when('/home', {
 			templateUrl: './views/home.html',
@@ -31,11 +31,11 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-storage', '
 			clientID: 'PbkQCgbjAuOV4hf02FMZ3xRzTivqJwK9'
 		});
 
-		authProvider.on('loginSuccess', function($location, profilePromise, idToken, store) {
+		authProvider.on('loginSuccess', function($location, profilePromise, idToken) {
 			console.log("Login Success");
 			profilePromise.then(function(profile) {
-				store.set('profile', profile);
-				store.set('token', idToken);
+				localStorage.setItem('profile', profile);
+				localStorage.setItem('token', idToken);
 			});
 			$location.path('/');
 		});
@@ -44,23 +44,23 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-storage', '
 		   // Error Callback
 		});
 
-		jwtInterceptorProvider.tokenGetter = ['store', function(store) {
-			return store.get('token');
+		jwtInterceptorProvider.tokenGetter = [function() {
+			return localStorage.getItem('token');
 		}];
 
 		$httpProvider.interceptors.push('jwtInterceptor');
 
 	}])
 
-	.run(function($rootScope, auth, store, jwtHelper, $location) {
+	.run(function($rootScope, auth, jwtHelper, $location) {
 		auth.hookEvents();
 		// This events gets triggered on refresh or URL change
 		$rootScope.$on('$locationChangeStart', function() {
-			var token = store.get('token');
+			var token = localStorage.getItem('token');
 			if (token) {
 				if (!jwtHelper.isTokenExpired(token)) {
 					if (!auth.isAuthenticated) {
-						auth.authenticate(store.get('profile'), token);
+						auth.authenticate(localStorage.getItem('profile'), token);
 					}
 				} else {
 					// Either show the login page or use the refresh token to get a new idToken
@@ -78,14 +78,14 @@ angular.module('beerApp', ['ngRoute', 'ngAnimate', 'auth0', 'angular-storage', '
 
 	})
 
-	.controller('loginCtrl', ['$scope', 'auth', 'store', function($scope, auth, store) {
+	.controller('loginCtrl', ['$scope', 'auth', function($scope, auth) {
 		$scope.auth = auth;
 		$scope.title = "Home";
 
 		$scope.logout = function() {
 			auth.signout();
-			store.remove('profile');
-			store.remove('token');
+			localStorage.removeItem('profile');
+			localStorage.removeItem('token');
 			console.log("Logged out! " + auth.isAuthenticated);
 		};
 
