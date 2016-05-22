@@ -5,6 +5,8 @@ var jwt = require('express-jwt');
 var port = process.env.PORT || CONFIG.port;
 var AUTH_SECRET = process.env.AUTH_SECRET;
 var AUTH_CLIENT = process.env.AUTH_CLIENT;
+var MLAB_USER = process.env.MLAB_USER;
+var MLAB_PW = process.env.MLAB_PW;
 
 var jwtCheck = jwt({
 	secret: new Buffer(AUTH_SECRET, 'base64'),
@@ -19,7 +21,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-mongoose.connect('mongodb://muser:m0ng0pass!@ds019970.mlab.com:19970/mongotest', function(err) {
+mongoose.connect('mongodb://' + MLAB_USER + ':' + MLAB_PW + '@ds019970.mlab.com:19970/mongotest', function(err) {
 	if (err) {
 		console.log('connection error', err);
 	} else {
